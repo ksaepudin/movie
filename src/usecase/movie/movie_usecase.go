@@ -74,7 +74,6 @@ func (m *movieUsecase) DeleteMovie(id int) (interface{}, error) {
 func (m *movieUsecase) GetAllMovie(search string) (interface{}, error) {
 	var (
 		resRepo interface{}
-		res     []*entity.Movie
 		err     error
 	)
 
@@ -88,11 +87,13 @@ func (m *movieUsecase) GetAllMovie(search string) (interface{}, error) {
 		return nil, err
 	}
 
-	res = resRepo.([]*entity.Movie)
-	return res, nil
+	return resRepo, nil
 }
 
 func (m *movieUsecase) GetMovieByID(id int) (interface{}, error) {
+	if id == 0 {
+		return nil, errors.New("Request Cannot be 0")
+	}
 	res, err := m.movieRepo.GetMovieByID(id)
 	if err != nil {
 		return nil, err

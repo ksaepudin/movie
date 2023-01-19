@@ -165,13 +165,89 @@ func TestGetAllMovie(t *testing.T) {
 				So(resp, ShouldNotBeNil)
 				So(err, ShouldBeNil)
 			})
-			// Convey("GetAllMovie  scenarios", func() {
-			// 	movieRepo.On("GetAllMovie").Return(res, nil).Once()
-			// 	uc := NewMovieUsecase(movieRepo)
-			// 	resp, err := uc.GetAllMovie("")
-			// 	So(resp, ShouldNotBeNil)
-			// 	So(err, ShouldBeNil)
-			// })
+			Convey("GetAllMovie  scenarios", func() {
+				movieRepo.On("GetAllMovie").Return(res, nil).Once()
+				uc := NewMovieUsecase(movieRepo)
+				resp, err := uc.GetAllMovie("")
+				So(resp, ShouldNotBeNil)
+				So(err, ShouldBeNil)
+			})
+		})
+	})
+}
+func TestGetMovieByID(t *testing.T) {
+	movieRepo := &mockRepo.MockMovieRepo{}
+	req := 1
+	res := &entity.Movie{
+		Id:          9999,
+		Title:       "succsess",
+		Description: "succsess",
+		Rating:      999,
+		Image:       "succsess",
+		CreatedAt:   "succsess",
+		UpdatedAt:   "succsess",
+	}
+
+	var resInterface interface{}
+	resInterface = res
+	Convey("Test Usecase Update Movie", t, func() {
+		Convey("negative scenarios", func() {
+			Convey("GetMovieByID some 0 scenarios", func() {
+				uc := NewMovieUsecase(movieRepo)
+				resp, err := uc.GetMovieByID(0)
+				So(resp, ShouldBeNil)
+				So(err, ShouldNotBeNil)
+			})
+			Convey("GetMovieByID some error scenarios", func() {
+				movieRepo.On("GetMovieByID", mock.Anything).Return(nil, errors.New("some error")).Once()
+				uc := NewMovieUsecase(movieRepo)
+				resp, err := uc.GetMovieByID(req)
+				So(resp, ShouldBeNil)
+				So(err, ShouldNotBeNil)
+			})
+		})
+		Convey("Positif scenarios", func() {
+			Convey("GetMovieByID not empety scenarios", func() {
+				movieRepo.On("GetMovieByID", mock.Anything).Return(resInterface, nil).Once()
+				uc := NewMovieUsecase(movieRepo)
+				resp, err := uc.GetMovieByID(1)
+				So(resp, ShouldNotBeNil)
+				So(err, ShouldBeNil)
+			})
+		})
+	})
+}
+func TestDeleteMovie(t *testing.T) {
+	movieRepo := &mockRepo.MockMovieRepo{}
+	req := 1
+	res := "succest Delete"
+
+	var resInterface interface{}
+	resInterface = res
+	Convey("Test Usecase Update Movie", t, func() {
+		Convey("negative scenarios", func() {
+			Convey("DeleteMovie some 0 scenarios", func() {
+				uc := NewMovieUsecase(movieRepo)
+				resp, err := uc.DeleteMovie(0)
+				So(resp, ShouldBeNil)
+				So(err, ShouldNotBeNil)
+			})
+			Convey("DeleteMovie some error scenarios", func() {
+				movieRepo.On("DeleteMovie", mock.Anything).Return(nil, errors.New("some error")).Once()
+				uc := NewMovieUsecase(movieRepo)
+				resp, err := uc.DeleteMovie(req)
+				So(resp, ShouldBeNil)
+				So(err, ShouldNotBeNil)
+			})
+		})
+		Convey("Positif scenarios", func() {
+			Convey("DeleteMovie not empety scenarios", func() {
+				movieRepo.On("DeleteMovie", mock.Anything).Return(resInterface, nil).Once()
+				uc := NewMovieUsecase(movieRepo)
+				resp, err := uc.DeleteMovie(1)
+				So(resp, ShouldNotBeNil)
+				So(err, ShouldBeNil)
+			})
 		})
 	})
 }
